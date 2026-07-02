@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<package schemaVersion="1.7.36" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xs:noNamespaceSchemaLocation="https://raw.githubusercontent.com/Open-CMSIS-Pack/Open-CMSIS-Pack-Spec/v1.7.36/schema/PACK.xsd">
+<package schemaVersion="1.7.56" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xs:noNamespaceSchemaLocation="https://raw.githubusercontent.com/Open-CMSIS-Pack/Open-CMSIS-Pack-Spec/v1.7.56/schema/PACK.xsd">
   <vendor>Keil</vendor>
   <name>STM32H5xx_DFP</name>
   <description overview="Documents/OVERVIEW.md">STMicroelectronics STM32H5 Series Device Support</description>
@@ -13,8 +13,12 @@
   </licenseSets>
 
   <releases>
-    <release version="2.2.1-dev">
+    <release version="2.3.0-dev">
       Active development ...
+      Package Description (pdsc):
+      - Added support for STM32H553/H543 lines with 1M/512k flash: internal Non-secure/Secure Flash programming
+      Added STM32H573I-DK external loader
+      Added H553/H543 SVD files
     </release>
     <release version="1.3.0" date="2024-04-04">
       Updated to STM32Cube_FW_H5 Firmware Package version V1.2.0
@@ -67,6 +71,8 @@
   <devices>
     <family Dfamily="STM32H5 Series" Dvendor="STMicroelectronics:13">
       <processor Dcore="Cortex-M33" DcoreVersion="r0p0" Dfpu="SP_FPU" Dmpu="MPU" Ddsp="DSP" Dendian="Little-endian" Dclock="250000000"/>
+
+      <algorithm name="CMSIS/Flash/MX25LM51245G_STM32H573I-DK.FLM" start="0x90000000" size="0x04000000" RAMstart="0x20000000" RAMsize="0xA0000" default="0" />
       <description>
 High-performance STM32H5 MCUs with Arm Cortex-M33 core, MPU, instruction cache, DSP, FPU, 375 DMIPS at 250 MHz.
       </description>
@@ -472,6 +478,256 @@ High-performance STM32H5 MCUs with Arm Cortex-M33 core, MPU, instruction cache, 
         </sequence>
       </sequences>
 
+      <!-- ************************  Subfamily 'STM32H543'  *************************** -->
+      <subFamily DsubFamily="STM32H543">
+        <processor Dtz="TZ"/>
+        <debug __ap="1" svd="CMSIS/SVD/STM32H543.svd"/>
+        <compile define="STM32H543xx"/>
+        <debugvars configfile="CMSIS/Debug/STM32H562xx_H563xx_H573xx.dbgconf" version="1.0.0">
+          __var DbgMCU_CR       = 0x00000006;   // DBGMCU_CR: DBG_STOP, DBG_STANDBY
+          __var DbgMCU_APB1L_Fz = 0x00000000;   // DGBMCU_APB1LFZR: All Peripherals Operate as in Normal Mode
+          __var DbgMCU_APB1H_Fz = 0x00000000;   // DGBMCU_APB1HFZR: All Peripherals Operate as in Normal Mode
+          __var DbgMCU_APB2_Fz  = 0x00000000;   // DGBMCU_APB2FZR : All Peripherals Operate as in Normal Mode
+          __var DbgMCU_APB3_Fz  = 0x00000000;   // DBGMCU_APB3FZR : All Peripherals Operate as in Normal Mode
+          __var DbgMCU_AHB1_Fz  = 0x00000000;   // DBGMCU_AHB1FZR : All Peripherals Operate as in Normal Mode
+          __var TraceClk_Pin    = 0x00040002;   // PE2
+          __var TraceD0_Pin     = 0x00040003;   // PE3
+          __var TraceD1_Pin     = 0x00040004;   // PE4
+          __var TraceD2_Pin     = 0x00040005;   // PE5
+          __var TraceD3_Pin     = 0x00040006;   // PE6
+        </debugvars>
+        <memory name="SRAM1_NS"   access="rwx"                start="0x20000000" size="0x00020000" default="1" init="0" />
+        <memory name="SRAM1_S"    access="rwx"                start="0x30000000" size="0x00020000" alias="SRAM1_NS" />
+        <memory name="SRAM2_NS"   access="rwx"                start="0x20020000" size="0x00014000" default="1" init="0" />
+        <memory name="SRAM2_S"    access="rwx"                start="0x30020000" size="0x00014000" alias="SRAM2_NS" />
+        <memory name="SRAM3_NS"   access="rwx"                start="0x20034000" size="0x00018000" default="1" init="0" />
+        <memory name="SRAM3_S"    access="rwx"                start="0x30034000" size="0x00018000" alias="SRAM3_NS" />
+        <memory name="BKPSRAM_NS" access="rwx"                start="0x40036400" size="0x00000800" default="1" init="0" />
+        <memory name="BKPSRAM_S"  access="rwx"                start="0x40036400" size="0x00000800" alias="BKPSRAM_NS" />
+
+        <!-- ################################### 1MB ################################## -->
+        <!-- *************************  Device 'STM32H543UG'   ************************ -->
+        <device Dname="STM32H543UGYxTR">
+          <memory name="Flash"   access="rx"                  start="0x08000000" size="0x00100000" default="1" startup="1" />
+          <algorithm name="CMSIS/Flash/STM32H5xx_1M_0800.FLM" start="0x08000000" size="0x00100000" default="1" RAMstart="0x20000000" RAMsize="0x8000" />
+          <algorithm name="CMSIS/Flash/STM32H5xx_1M_0C00.FLM" start="0x0C000000" size="0x00100000" default="1" RAMstart="0x20000000" RAMsize="0x8000" />
+          <feature type="CSP" n="63"/>
+        </device>
+        <!-- *************************  Device 'STM32H543CG'   ************************ -->
+        <device Dname="STM32H543CGUx">
+          <memory name="Flash"   access="rx"                  start="0x08000000" size="0x00100000" default="1" startup="1" />
+          <algorithm name="CMSIS/Flash/STM32H5xx_1M_0800.FLM" start="0x08000000" size="0x00100000" default="1" RAMstart="0x20000000" RAMsize="0x8000" />
+          <algorithm name="CMSIS/Flash/STM32H5xx_1M_0C00.FLM" start="0x0C000000" size="0x00100000" default="1" RAMstart="0x20000000" RAMsize="0x8000" />
+          <feature type="QFN" n="48"/>
+        </device>
+        <device Dname="STM32H543CGTx">
+          <memory name="Flash"   access="rx"                  start="0x08000000" size="0x00100000" default="1" startup="1" />
+          <algorithm name="CMSIS/Flash/STM32H5xx_1M_0800.FLM" start="0x08000000" size="0x00100000" default="1" RAMstart="0x20000000" RAMsize="0x8000" />
+          <algorithm name="CMSIS/Flash/STM32H5xx_1M_0C00.FLM" start="0x0C000000" size="0x00100000" default="1" RAMstart="0x20000000" RAMsize="0x8000" />
+          <feature type="QFP" n="48"/>
+        </device>
+        <!-- *************************  Device 'STM32H543RG'   ************************ -->
+        <device Dname="STM32H543RGTx">
+          <memory name="Flash"   access="rx"                  start="0x08000000" size="0x00100000" default="1" startup="1" />
+          <algorithm name="CMSIS/Flash/STM32H5xx_1M_0800.FLM" start="0x08000000" size="0x00100000" default="1" RAMstart="0x20000000" RAMsize="0x8000" />
+          <algorithm name="CMSIS/Flash/STM32H5xx_1M_0C00.FLM" start="0x0C000000" size="0x00100000" default="1" RAMstart="0x20000000" RAMsize="0x8000" />
+          <feature type="QFP" n="64"/>
+        </device>
+        <!-- *************************  Device 'STM32H543VG'   ************************ -->
+        <device Dname="STM32H543VGTx">
+          <memory name="Flash"   access="rx"                  start="0x08000000" size="0x00100000" default="1" startup="1" />
+          <algorithm name="CMSIS/Flash/STM32H5xx_1M_0800.FLM" start="0x08000000" size="0x00100000" default="1" RAMstart="0x20000000" RAMsize="0x8000" />
+          <algorithm name="CMSIS/Flash/STM32H5xx_1M_0C00.FLM" start="0x0C000000" size="0x00100000" default="1" RAMstart="0x20000000" RAMsize="0x8000" />
+          <feature type="QFP" n="100"/>
+        </device>
+        <device Dname="STM32H543VGZx">
+          <memory name="Flash"   access="rx"                  start="0x08000000" size="0x00100000" default="1" startup="1" />
+          <algorithm name="CMSIS/Flash/STM32H5xx_1M_0800.FLM" start="0x08000000" size="0x00100000" default="1" RAMstart="0x20000000" RAMsize="0x8000" />
+          <algorithm name="CMSIS/Flash/STM32H5xx_1M_0C00.FLM" start="0x0C000000" size="0x00100000" default="1" RAMstart="0x20000000" RAMsize="0x8000" />
+          <feature type="QFP" n="100"/>
+        </device>
+        <device Dname="STM32H543VGIx">
+          <memory name="Flash"   access="rx"                  start="0x08000000" size="0x00100000" default="1" startup="1" />
+          <algorithm name="CMSIS/Flash/STM32H5xx_1M_0800.FLM" start="0x08000000" size="0x00100000" default="1" RAMstart="0x20000000" RAMsize="0x8000" />
+          <algorithm name="CMSIS/Flash/STM32H5xx_1M_0C00.FLM" start="0x0C000000" size="0x00100000" default="1" RAMstart="0x20000000" RAMsize="0x8000" />
+          <feature type="BGA" n="100"/>
+        </device>
+        <!-- *************************  Device 'STM32H543ZG'   ************************ -->
+        <device Dname="STM32H543ZGTx">
+          <memory name="Flash"   access="rx"                  start="0x08000000" size="0x00100000" default="1" startup="1" />
+          <algorithm name="CMSIS/Flash/STM32H5xx_1M_0800.FLM" start="0x08000000" size="0x00100000" default="1" RAMstart="0x20000000" RAMsize="0x8000" />
+          <algorithm name="CMSIS/Flash/STM32H5xx_1M_0C00.FLM" start="0x0C000000" size="0x00100000" default="1" RAMstart="0x20000000" RAMsize="0x8000" />
+          <feature type="QFP" n="144"/>
+        </device>
+        <device Dname="STM32H543ZGZx">
+          <memory name="Flash"   access="rx"                  start="0x08000000" size="0x00100000" default="1" startup="1" />
+          <algorithm name="CMSIS/Flash/STM32H5xx_1M_0800.FLM" start="0x08000000" size="0x00100000" default="1" RAMstart="0x20000000" RAMsize="0x8000" />
+          <algorithm name="CMSIS/Flash/STM32H5xx_1M_0C00.FLM" start="0x0C000000" size="0x00100000" default="1" RAMstart="0x20000000" RAMsize="0x8000" />
+          <feature type="QFP" n="144"/>
+        </device>
+        <device Dname="STM32H543ZGJx">
+          <memory name="Flash"   access="rx"                  start="0x08000000" size="0x00100000" default="1" startup="1" />
+          <algorithm name="CMSIS/Flash/STM32H5xx_1M_0800.FLM" start="0x08000000" size="0x00100000" default="1" RAMstart="0x20000000" RAMsize="0x8000" />
+          <algorithm name="CMSIS/Flash/STM32H5xx_1M_0C00.FLM" start="0x0C000000" size="0x00100000" default="1" RAMstart="0x20000000" RAMsize="0x8000" />
+          <feature type="BGA" n="144"/>
+        </device>
+
+        <!-- ################################### 512KB ################################## -->
+        <!-- *************************  Device 'STM32H543CE'   ************************ -->
+        <device Dname="STM32H543CEUx">
+          <memory name="Flash"   access="rx"                    start="0x08000000" size="0x00080000" default="1" startup="1" />
+          <algorithm name="CMSIS/Flash/STM32H5xx_512K_0800.FLM" start="0x08000000" size="0x00080000" default="1" RAMstart="0x20000000" RAMsize="0x8000" />
+          <algorithm name="CMSIS/Flash/STM32H5xx_512K_0C00.FLM" start="0x0C000000" size="0x00080000" default="1" RAMstart="0x20000000" RAMsize="0x8000" />
+          <feature type="QFN" n="48"/>
+        </device>
+        <device Dname="STM32H543CETx">
+          <memory name="Flash"   access="rx"                    start="0x08000000" size="0x00080000" default="1" startup="1" />
+          <algorithm name="CMSIS/Flash/STM32H5xx_512K_0800.FLM" start="0x08000000" size="0x00080000" default="1" RAMstart="0x20000000" RAMsize="0x8000" />
+          <algorithm name="CMSIS/Flash/STM32H5xx_512K_0C00.FLM" start="0x0C000000" size="0x00080000" default="1" RAMstart="0x20000000" RAMsize="0x8000" />
+          <feature type="QFP" n="48"/>
+        </device>
+        <!-- *************************  Device 'STM32H543RE'   ************************ -->
+        <device Dname="STM32H543RETx">
+          <memory name="Flash"   access="rx"                    start="0x08000000" size="0x00080000" default="1" startup="1" />
+          <algorithm name="CMSIS/Flash/STM32H5xx_512K_0800.FLM" start="0x08000000" size="0x00080000" default="1" RAMstart="0x20000000" RAMsize="0x8000" />
+          <algorithm name="CMSIS/Flash/STM32H5xx_512K_0C00.FLM" start="0x0C000000" size="0x00080000" default="1" RAMstart="0x20000000" RAMsize="0x8000" />
+          <feature type="QFP" n="64"/>
+        </device>
+        <!-- *************************  Device 'STM32H543VE'   ************************ -->
+        <device Dname="STM32H543VETx">
+          <memory name="Flash"   access="rx"                    start="0x08000000" size="0x00080000" default="1" startup="1" />
+          <algorithm name="CMSIS/Flash/STM32H5xx_512K_0800.FLM" start="0x08000000" size="0x00080000" default="1" RAMstart="0x20000000" RAMsize="0x8000" />
+          <algorithm name="CMSIS/Flash/STM32H5xx_512K_0C00.FLM" start="0x0C000000" size="0x00080000" default="1" RAMstart="0x20000000" RAMsize="0x8000" />
+          <feature type="QFP" n="100"/>
+        </device>
+        <device Dname="STM32H543VEZx">
+          <memory name="Flash"   access="rx"                    start="0x08000000" size="0x00080000" default="1" startup="1" />
+          <algorithm name="CMSIS/Flash/STM32H5xx_512K_0800.FLM" start="0x08000000" size="0x00080000" default="1" RAMstart="0x20000000" RAMsize="0x8000" />
+          <algorithm name="CMSIS/Flash/STM32H5xx_512K_0C00.FLM" start="0x0C000000" size="0x00080000" default="1" RAMstart="0x20000000" RAMsize="0x8000" />
+          <feature type="QFP" n="100"/>
+        </device>
+        <device Dname="STM32H543VEIx">
+          <memory name="Flash"   access="rx"                    start="0x08000000" size="0x00080000" default="1" startup="1" />
+          <algorithm name="CMSIS/Flash/STM32H5xx_512K_0800.FLM" start="0x08000000" size="0x00080000" default="1" RAMstart="0x20000000" RAMsize="0x8000" />
+          <algorithm name="CMSIS/Flash/STM32H5xx_512K_0C00.FLM" start="0x0C000000" size="0x00080000" default="1" RAMstart="0x20000000" RAMsize="0x8000" />
+          <feature type="BGA" n="100"/>
+        </device>
+        <!-- *************************  Device 'STM32H543ZE'   ************************ -->
+        <device Dname="STM32H543ZETx">
+          <memory name="Flash"   access="rx"                    start="0x08000000" size="0x00080000" default="1" startup="1" />
+          <algorithm name="CMSIS/Flash/STM32H5xx_512K_0800.FLM" start="0x08000000" size="0x00080000" default="1" RAMstart="0x20000000" RAMsize="0x8000" />
+          <algorithm name="CMSIS/Flash/STM32H5xx_512K_0C00.FLM" start="0x0C000000" size="0x00080000" default="1" RAMstart="0x20000000" RAMsize="0x8000" />
+          <feature type="QFP" n="144"/>
+        </device>
+        <device Dname="STM32H543ZEZx">
+          <memory name="Flash"   access="rx"                    start="0x08000000" size="0x00080000" default="1" startup="1" />
+          <algorithm name="CMSIS/Flash/STM32H5xx_512K_0800.FLM" start="0x08000000" size="0x00080000" default="1" RAMstart="0x20000000" RAMsize="0x8000" />
+          <algorithm name="CMSIS/Flash/STM32H5xx_512K_0C00.FLM" start="0x0C000000" size="0x00080000" default="1" RAMstart="0x20000000" RAMsize="0x8000" />
+          <feature type="QFP" n="144"/>
+        </device>
+        <device Dname="STM32H543ZEJx">
+          <memory name="Flash"   access="rx"                    start="0x08000000" size="0x00080000" default="1" startup="1" />
+          <algorithm name="CMSIS/Flash/STM32H5xx_512K_0800.FLM" start="0x08000000" size="0x00080000" default="1" RAMstart="0x20000000" RAMsize="0x8000" />
+          <algorithm name="CMSIS/Flash/STM32H5xx_512K_0C00.FLM" start="0x0C000000" size="0x00080000" default="1" RAMstart="0x20000000" RAMsize="0x8000" />
+          <feature type="BGA" n="144"/>
+        </device>
+      </subFamily>
+
+      <!-- ************************  Subfamily 'STM32H553'  *************************** -->
+      <subFamily DsubFamily="STM32H553">
+        <processor Dtz="TZ"/>
+        <debug __ap="1" svd="CMSIS/SVD/STM32H553.svd"/>
+        <compile define="STM32H553xx"/>
+        <debugvars configfile="CMSIS/Debug/STM32H562xx_H563xx_H573xx.dbgconf" version="1.0.0">
+          __var DbgMCU_CR       = 0x00000006;   // DBGMCU_CR: DBG_STOP, DBG_STANDBY
+          __var DbgMCU_APB1L_Fz = 0x00000000;   // DGBMCU_APB1LFZR: All Peripherals Operate as in Normal Mode
+          __var DbgMCU_APB1H_Fz = 0x00000000;   // DGBMCU_APB1HFZR: All Peripherals Operate as in Normal Mode
+          __var DbgMCU_APB2_Fz  = 0x00000000;   // DGBMCU_APB2FZR : All Peripherals Operate as in Normal Mode
+          __var DbgMCU_APB3_Fz  = 0x00000000;   // DBGMCU_APB3FZR : All Peripherals Operate as in Normal Mode
+          __var DbgMCU_AHB1_Fz  = 0x00000000;   // DBGMCU_AHB1FZR : All Peripherals Operate as in Normal Mode
+          __var TraceClk_Pin    = 0x00040002;   // PE2
+          __var TraceD0_Pin     = 0x00040003;   // PE3
+          __var TraceD1_Pin     = 0x00040004;   // PE4
+          __var TraceD2_Pin     = 0x00040005;   // PE5
+          __var TraceD3_Pin     = 0x00040006;   // PE6
+        </debugvars>
+        <memory name="SRAM1_NS"   access="rwx"                start="0x20000000" size="0x00020000" default="1" init="0" />
+        <memory name="SRAM1_S"    access="rwx"                start="0x30000000" size="0x00020000" alias="SRAM1_NS" />
+        <memory name="SRAM2_NS"   access="rwx"                start="0x20020000" size="0x00014000" default="1" init="0" />
+        <memory name="SRAM2_S"    access="rwx"                start="0x30020000" size="0x00014000" alias="SRAM2_NS" />
+        <memory name="SRAM3_NS"   access="rwx"                start="0x20034000" size="0x00018000" default="1" init="0" />
+        <memory name="SRAM3_S"    access="rwx"                start="0x30034000" size="0x00018000" alias="SRAM3_NS" />
+        <memory name="BKPSRAM_NS" access="rwx"                start="0x40036400" size="0x00000800" default="1" init="0" />
+        <memory name="BKPSRAM_S"  access="rwx"                start="0x40036400" size="0x00000800" alias="BKPSRAM_NS" />
+
+        <!-- ################################### 1MB ################################## -->
+        <!-- *************************  Device 'STM32H553UG'   ************************ -->
+        <device Dname="STM32H553UGYxTR">
+          <memory name="Flash"   access="rx"                  start="0x08000000" size="0x00100000" default="1" startup="1" />
+          <algorithm name="CMSIS/Flash/STM32H5xx_1M_0800.FLM" start="0x08000000" size="0x00100000" default="1" RAMstart="0x20000000" RAMsize="0x8000" />
+          <algorithm name="CMSIS/Flash/STM32H5xx_1M_0C00.FLM" start="0x0C000000" size="0x00100000" default="1" RAMstart="0x20000000" RAMsize="0x8000" />
+          <feature type="CSP" n="63"/>
+        </device>
+        <!-- *************************  Device 'STM32H553CG'   ************************ -->
+        <device Dname="STM32H553CGUx">
+          <memory name="Flash"   access="rx"                  start="0x08000000" size="0x00100000" default="1" startup="1" />
+          <algorithm name="CMSIS/Flash/STM32H5xx_1M_0800.FLM" start="0x08000000" size="0x00100000" default="1" RAMstart="0x20000000" RAMsize="0x8000" />
+          <algorithm name="CMSIS/Flash/STM32H5xx_1M_0C00.FLM" start="0x0C000000" size="0x00100000" default="1" RAMstart="0x20000000" RAMsize="0x8000" />
+          <feature type="QFN" n="48"/>
+        </device>
+        <device Dname="STM32H553CGTx">
+          <memory name="Flash"   access="rx"                  start="0x08000000" size="0x00100000" default="1" startup="1" />
+          <algorithm name="CMSIS/Flash/STM32H5xx_1M_0800.FLM" start="0x08000000" size="0x00100000" default="1" RAMstart="0x20000000" RAMsize="0x8000" />
+          <algorithm name="CMSIS/Flash/STM32H5xx_1M_0C00.FLM" start="0x0C000000" size="0x00100000" default="1" RAMstart="0x20000000" RAMsize="0x8000" />
+          <feature type="QFP" n="48"/>
+        </device>
+        <!-- *************************  Device 'STM32H553RG'   ************************ -->
+        <device Dname="STM32H553RGTx">
+          <memory name="Flash"   access="rx"                  start="0x08000000" size="0x00100000" default="1" startup="1" />
+          <algorithm name="CMSIS/Flash/STM32H5xx_1M_0800.FLM" start="0x08000000" size="0x00100000" default="1" RAMstart="0x20000000" RAMsize="0x8000" />
+          <algorithm name="CMSIS/Flash/STM32H5xx_1M_0C00.FLM" start="0x0C000000" size="0x00100000" default="1" RAMstart="0x20000000" RAMsize="0x8000" />
+          <feature type="QFP" n="64"/>
+        </device>
+        <!-- *************************  Device 'STM32H553VG'   ************************ -->
+        <device Dname="STM32H553VGTx">
+          <memory name="Flash"   access="rx"                  start="0x08000000" size="0x00100000" default="1" startup="1" />
+          <algorithm name="CMSIS/Flash/STM32H5xx_1M_0800.FLM" start="0x08000000" size="0x00100000" default="1" RAMstart="0x20000000" RAMsize="0x8000" />
+          <algorithm name="CMSIS/Flash/STM32H5xx_1M_0C00.FLM" start="0x0C000000" size="0x00100000" default="1" RAMstart="0x20000000" RAMsize="0x8000" />
+          <feature type="QFP" n="100"/>
+        </device>
+        <device Dname="STM32H553VGZx">
+          <memory name="Flash"   access="rx"                  start="0x08000000" size="0x00100000" default="1" startup="1" />
+          <algorithm name="CMSIS/Flash/STM32H5xx_1M_0800.FLM" start="0x08000000" size="0x00100000" default="1" RAMstart="0x20000000" RAMsize="0x8000" />
+          <algorithm name="CMSIS/Flash/STM32H5xx_1M_0C00.FLM" start="0x0C000000" size="0x00100000" default="1" RAMstart="0x20000000" RAMsize="0x8000" />
+          <feature type="QFP" n="100"/>
+        </device>
+        <device Dname="STM32H553VGIx">
+          <memory name="Flash"   access="rx"                  start="0x08000000" size="0x00100000" default="1" startup="1" />
+          <algorithm name="CMSIS/Flash/STM32H5xx_1M_0800.FLM" start="0x08000000" size="0x00100000" default="1" RAMstart="0x20000000" RAMsize="0x8000" />
+          <algorithm name="CMSIS/Flash/STM32H5xx_1M_0C00.FLM" start="0x0C000000" size="0x00100000" default="1" RAMstart="0x20000000" RAMsize="0x8000" />
+          <feature type="BGA" n="100"/>
+        </device>
+        <!-- *************************  Device 'STM32H553ZG'   ************************ -->
+        <device Dname="STM32H553ZGTx">
+          <memory name="Flash"   access="rx"                  start="0x08000000" size="0x00100000" default="1" startup="1" />
+          <algorithm name="CMSIS/Flash/STM32H5xx_1M_0800.FLM" start="0x08000000" size="0x00100000" default="1" RAMstart="0x20000000" RAMsize="0x8000" />
+          <algorithm name="CMSIS/Flash/STM32H5xx_1M_0C00.FLM" start="0x0C000000" size="0x00100000" default="1" RAMstart="0x20000000" RAMsize="0x8000" />
+          <feature type="QFP" n="144"/>
+        </device>       
+        <device Dname="STM32H553ZGZx">
+          <memory name="Flash"   access="rx"                  start="0x08000000" size="0x00100000" default="1" startup="1" />
+          <algorithm name="CMSIS/Flash/STM32H5xx_1M_0800.FLM" start="0x08000000" size="0x00100000" default="1" RAMstart="0x20000000" RAMsize="0x8000" />
+          <algorithm name="CMSIS/Flash/STM32H5xx_1M_0C00.FLM" start="0x0C000000" size="0x00100000" default="1" RAMstart="0x20000000" RAMsize="0x8000" />
+          <feature type="QFP" n="144"/>
+        </device>
+        <device Dname="STM32H553ZGJx">
+          <memory name="Flash"   access="rx"                  start="0x08000000" size="0x00100000" default="1" startup="1" />
+          <algorithm name="CMSIS/Flash/STM32H5xx_1M_0800.FLM" start="0x08000000" size="0x00100000" default="1" RAMstart="0x20000000" RAMsize="0x8000" />
+          <algorithm name="CMSIS/Flash/STM32H5xx_1M_0C00.FLM" start="0x0C000000" size="0x00100000" default="1" RAMstart="0x20000000" RAMsize="0x8000" />
+          <feature type="BGA" n="144"/>
+        </device>
+      </subFamily>
+
       <!-- ************************  Subfamily 'STM32H5F5'  *************************** -->
       <subFamily DsubFamily="STM32H5F5">
         <processor Dtz="TZ"/>
@@ -544,6 +800,7 @@ High-performance STM32H5 MCUs with Arm Cortex-M33 core, MPU, instruction cache, 
           <feature type="BGA" n="225"/>
         </device>
       </subFamily>
+
       <!-- ************************  Subfamily 'STM32H5F4'  *************************** -->
       <subFamily DsubFamily="STM32H5F4">
         <processor Dtz="TZ"/>
@@ -665,6 +922,7 @@ High-performance STM32H5 MCUs with Arm Cortex-M33 core, MPU, instruction cache, 
           <feature type="BGA" n="169"/>
         </device>
       </subFamily>
+
       <!-- ************************  Subfamily 'STM32H5E5'  *************************** -->
       <subFamily DsubFamily="STM32H5E5">
         <processor Dtz="TZ"/>
@@ -777,6 +1035,7 @@ High-performance STM32H5 MCUs with Arm Cortex-M33 core, MPU, instruction cache, 
           <feature type="BGA" n="225"/>
         </device>
       </subFamily>
+
       <!-- ************************  Subfamily 'STM32H5E4'  *************************** -->
       <subFamily DsubFamily="STM32H5E4">
         <processor Dtz="TZ"/>
